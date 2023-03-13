@@ -1,0 +1,32 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploying
+      uses: burnett01/rsync-deployments@5.2
+      with:
+        switches: -rp --delete-after -azh --exclude .git --exclude .gitignore --exclude .github --exclude .env --exclude Update.sh --exclude Dockerfile
+        remote_path: /home/ktizo/ktizo-backend/dev/
+        remote_host: ${{ secrets.HOST }}
+        remote_port: ${{ secrets.PORT }}
+        remote_user: ${{ secrets.USER }}
+        remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+  update:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Updating
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: sh /home/ktizo/ktizo-backend/dev/Update.sh

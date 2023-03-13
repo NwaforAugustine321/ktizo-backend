@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: ktizo-backend
+    build: .
+    restart: on-failure
+    command: >
+      sh -c "pipenv run alembic upgrade head && \
+             pipenv run uvicorn --host=0.0.0.0 main:app"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    container_name: ktizo-postgres
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=ktizo_local
+      - POSTGRES_USER=ktizo
+      - POSTGRES_PASSWORD=ktizoismysecretpassword
+    volumes:
+      - ./.docker_data/postgres_data:/var/lib/postgresql/data:cached
+
+volumes:
+  postgres_data:
+    name: ktizo_postgres_data

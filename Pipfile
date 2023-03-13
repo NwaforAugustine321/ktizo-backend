@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+pydantic = {extras = ["email"], version = "*"}
+bcrypt = "*"
+alembic = "*"
+sqlalchemy-utils = "*"
+passlib = "*"
+psycopg2 = "*"
+fastapi-mail = "*"
+boto3 = "*"
+pyjwt = "*"
+stripe ="*"
+python-dotenv = "*"
+fastapi-utils = "*"
+python-multipart = "*"
+spotipy = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "*"
